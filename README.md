@@ -155,7 +155,7 @@ dbsync --client=mysql \
        --files='*.pgsql' \
        --case-sensitive
 ```
-will will use options equivalent to the following options object:
+will use options equivalent to the following options object:
 ```
 {
   client: 'mysql',
@@ -202,15 +202,15 @@ or have succeeded, or when a single migration fails.
 `migrator.doAllMigrationsIfNeeded()`, but only performs a single migration (or skips it, based on
 `migrator.shouldMigrationRun(migrationId)`), and has a number of advanced behaviors available based on
 `migrationSource`:
-** if `migrationSource` is `undefined` or `null`, then `migrationId` is treated as a filename; otherwise, it
+  * if `migrationSource` is `undefined` or `null`, then `migrationId` is treated as a filename; otherwise, it
 `migrationId` is a user-defined string id which will identify this migration.
-** if `migrationSource` is a string, the string will be used as the content of the migration.
-** if `migrationsSource` is an instance of `stream.Readable`, the data from the stream will be used as the content of
+  * if `migrationSource` is a string, the string will be used as the content of the migration.
+  * if `migrationsSource` is an instance of `stream.Readable`, the data from the stream will be used as the content of
 the migration.  Note that the stream must return strings, not buffers.  (If you have a stream returning buffers, you
 can make it return strings by calling `myStream.setEncoding(encoding)`.)
-** if `migrationSource` is a promise (or then-able) which resolves to a string or a readable stream, the resolved value
+  * if `migrationSource` is a promise (or then-able) which resolves to a string or a readable stream, the resolved value
 will be used as described above.
-** if `migrationSource` is a function, the function will be called and its return value (which must be a string,
+  * if `migrationSource` is a function, the function will be called and its return value (which must be a string,
 readable stream, or promise to one of those) will be used as described above.  Note that the function will
 only be called if `migrator.shouldMigrationRun(migrationId)` resolved to `true` for `migrationId`; this makes it useful
 for migrations that require some effort/time/resources to set up, such as creating a stream that downloads a file from
