@@ -103,7 +103,6 @@ optionSpecs =
   "stack-traces":
     boolean: true
     describe: "If set, stack traces will be logged with any errors (when present)."
-  #TODO: add options to control db type
 
 
 module.exports = run: Promise.try () ->

@@ -52,13 +52,13 @@ dbsync will be used, or globally.
 Below are the details of command line options available for dbsync (the same help block can be displayed by running
 `dbsync --help`).
 ```
-  --help, -h             Show this help block                                                                  
+  --help, -h             Show help                                                                  
   --path, -p             Directory to scan for migration files; this part of the file path will not
                          be used when determining whether a migration has been run before.
                                                                                           [required]
-  --client, --db         A db client string, as appropriate to pass to Knex in the initialization
+  --client, --db         A db client string, as appropriate to pass to knex in the initialization
                          object: http://knexjs.org/#Installation-client                   [required]
-  --connection, --conn   Additional db connection options, as appropriate to pass to Knex in the
+  --connection, --conn   Additional db connection options, as appropriate to pass to knex in the
                          initialization object: http://knexjs.org/#Installation-client  In order to
                          set subproperties, use dot notation as in these examples: 
                          --client=pg --connection=postgres://user:pw@host:port/dbname?options 
@@ -111,10 +111,10 @@ Below are the details of command line options available for dbsync (the same hel
                          PostgreSQL. This is not relevant when --migration-at-once is also used.
                          For more details, see section 4.1.2.4. (Dollar-quoted String Constants) of
                          http://www.postgresql.org/docs/9.3/static/sql-syntax-lexical.html          
-  --command-buffering    The value is the number of SQL commands to buffer before pausing reading
-                         from the file. This is a performance-tuning option and shouldn't need to
-                         be altered for most use cases.                                 [default: 4]
-  --stack-traces         If set, stack traces will be logged with any errors (when present).        
+  --command-buffering    This sets the number of SQL commands to buffer before pausing reading from
+                         the file; must be a positive integer. This is a performance-tuning option
+                         and shouldn't need to be altered for most use cases.           [default: 4]
+  --stack-traces         If set, stack traces will be logged with any errors (when present).
 ```
 
 ## Programmatic usage
