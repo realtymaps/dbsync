@@ -54,7 +54,7 @@ module.exports = class Migrator
   # note: this is a static property of the class, not an instance property
   @defaults: defaults
 
-  _$.validateOptions: (optionsToCheck) ->
+  _$.validateOptions = (optionsToCheck) ->
     # don't check the 'logging' value here, it will check itself elsewhere
 
     if ["ignore", "log", "exit"].indexOf(optionsToCheck["on-read-error"]) == -1
@@ -227,7 +227,8 @@ module.exports = class Migrator
         , 'id'
 
     .then (rowId) =>
-      @executionContext.currentMigration.rowId = parseInt(rowId[0])
+      if rowId?
+        @executionContext.currentMigration.rowId = parseInt(rowId[0])
       if !migrationSource?
         # no content passed, so we need to get a file stream from the migrationId
         _$.logger.debug("MIGRATION: reading from file #{path.resolve(_$.options.path+'/'+migrationId)}")
