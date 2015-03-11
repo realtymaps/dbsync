@@ -214,14 +214,15 @@ by `scanForFiles()`).
 * `migrator.doAllMigrationsIfNeeded()` is what is used to execute migrations based on a command line invocation.  If
 `executionContext.files` is falsy, it will be set with the value returned by `scanForFiles()`, then
 `executionContext.files` will be used as its list of migration files.  This means it is possible to set a custom list
-of files (or a custom ordering of files) by setting `executionContext.files` before calling `doAllMigrationsIfNeeded()`.
-This method returns a promise which resolves to `executionContext` when all the migrations in the list have been
-skipped (based on the result of `shouldMigrationRun()`) or have succeeded, or when a single migration fails.
+of files (or a custom ordering of files) by setting `executionContext.files` before calling
+`doAllMigrationsIfNeeded()`. This method returns a promise which resolves to `executionContext` when all the migrations
+in the list have been skipped (based on the result of `shouldMigrationRun()`) or have succeeded, or when a single
+migration fails.
 * `migrator.doSingleMigrationIfNeeded(migrationId, [migrationSource])` is similar to `doAllMigrationsIfNeeded()`, but
 only performs a single migration (or skips it, based on `shouldMigrationRun()`), and has a number of advanced behaviors
 available based on `migrationSource`:
-  * if `migrationSource` is `undefined` or `null`, then `migrationId` is treated as a filename; otherwise, it
-`migrationId` is a user-defined string id which will identify this migration.
+  * if `migrationSource` is `undefined` or `null`, then `migrationId` is treated as a filename to load as the
+migration; otherwise, `migrationId` should be any user-defined string id which will identify this migration.
   * if `migrationSource` is a string, the string will be used as the content of the migration.
   * if `migrationsSource` is an instance of `stream.Readable`, the data from the stream will be used as the content of
 the migration.  Note that the stream must return strings, not buffers.  (If you have a stream returning buffers, you
