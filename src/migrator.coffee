@@ -14,12 +14,16 @@ fsReaddirPromise = Promise.promisify(fs.readdir, fs)
 globPromise = Promise.promisify(glob)
 
 
-isPositiveInteger = (value) ->
+validateNumber = (value, options={}) ->
   type = typeof(value)
   if value == '' || (type != 'string' and type != 'number')
     return false
   numvalue = +value
-  if isNaN(numvalue) || numvalue != Math.floor(numvalue) || numvalue <= 0
+  if isNaN(numvalue)
+    return false
+  if options.integer && numvalue != Math.floor(numvalue)
+    return false
+  if options.min? && numvalue < options.min || options.max? && numvalue > options.max
     return false
   return true
 
@@ -29,8 +33,11 @@ validateOptions = (optionsToCheck) ->
   if optionsToCheck["on-read-error"]? && ["ignore", "log", "exit"].indexOf(optionsToCheck["on-read-error"]) == -1
     throw "invalid value for 'on-read-error': '#{optionsToCheck["on-read-error"]}'"
 
-  if optionsToCheck["command-buffering"]? && !isPositiveInteger(optionsToCheck["command-buffering"])
+  if optionsToCheck["command-buffering"]? && !validateNumber(optionsToCheck["command-buffering"], min: 1, integer: true)
     throw "positive integer required for 'command-buffering', got: '#{optionsToCheck["command-buffering"]}'"
+
+  if optionsToCheck.reminder? && !validateNumber(optionsToCheck.reminder, min: 0)
+    throw "non-negative integer required for 'reminder', got: '#{optionsToCheck.reminder}'"
 
   if optionsToCheck["migration-at-once"] && optionsToCheck["autocommit"]
     throw "'migration-at-once' and 'autocommit' may not be used together"
@@ -50,6 +57,7 @@ defaults =
   "on-read-error": 'exit'
   "command-buffering": 4
   encoding: 'utf8'
+  reminder: 0
 
 
 module.exports = class Migrator
@@ -62,6 +70,8 @@ module.exports = class Migrator
     validateOptions(_options) # throws if there is a problem
     options = _.clone(_options)
     _.defaults(options, defaults)
+    if !options['dollar-quoting']?
+      options['dollar-quoting'] = (options.client == 'pg')
     logger = loggerFactory.getLogger(options.logging)
     logger.debug "STATUS: received migration options: #{JSON.stringify(options,null,2)}"
     @executionContext =
@@ -72,6 +82,7 @@ module.exports = class Migrator
       files: null
     db = null
     globalTransaction = null
+    reminderInterval = null
   
     initializeDbNoLeaks = (handler) =>
       Promise.try () =>
@@ -120,6 +131,10 @@ module.exports = class Migrator
         .finally () =>
           logger.debug "STATUS: closing database connection"
           db.destroy()
+
+    logReminderOutput = () =>
+      logger.log("REMINDER: Currently executing migration '#{@executionContext.currentMigration.migrationId}',
+                  command #{@executionContext.currentMigration.commandsCompleted+1}")
           
     getMigrationModsString = () =>
       migrationMods = []
@@ -162,6 +177,10 @@ module.exports = class Migrator
             lines_completed: @executionContext.currentMigration.linesCompleted
   
     handleMigrationFailure = (err) =>
+      if reminderInterval?
+        clearInterval(reminderInterval)
+        reminderInterval = null
+        
       if err == "skip"
         # not a really error, just chose to skip out of the migration for some reason
         return Promise.resolve()
@@ -258,6 +277,8 @@ module.exports = class Migrator
           return Promise.reject("bad migration content received")
           
       .then (migrationStream) =>
+        if options.reminder
+          reminderInterval = setInterval(logReminderOutput, Math.floor(options.reminder*60*1000))
         if options.autocommit
           # don't use a transaction, so each command will be committed individually
           return handleMigrationStream(db, migrationStream)
@@ -272,6 +293,9 @@ module.exports = class Migrator
             
       .then () =>
         # transaction complete and committed
+        if reminderInterval?
+          clearInterval(reminderInterval)
+          reminderInterval = null
         logger.info("MIGRATION: completed in #{@executionContext.currentMigration.duration/1000}s")
         @executionContext.successes.push(@executionContext.currentMigration)
         

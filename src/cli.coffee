@@ -23,7 +23,7 @@ optionSpecs =
     describe: "Additional db connection options, as appropriate to pass to knex in the initialization object:
               http://knexjs.org/#Installation-client  In order to set subproperties, use dot notation as in these
               examples:
-              \n    --client=pg --connection=postgres://user:pw@host:port/dbname?options
+              \n    --client=pg --connection=postgres://user:pw@host:port/dbname?opts
               \n    --client=mysql --connection.user=user --connection.host=localhost
               \n    --client=sqlite3 --connection.filename=./mydb.sqlite"
   table:
@@ -90,11 +90,20 @@ optionSpecs =
     describe: "If set, dbsync will not restrict the migrations performed to only those that have not run successfully
               before; this is useful for rerunning previously-run scripts during development, or for scripting misc db
               commands without requiring any additional client tools to be installed."
+  reminder:
+    requiresArg: true
+    describe: "Some environments where dbsync may run (e.g. CircleCI) require periodic output to ensure the process is
+              running properly.  Sometimes a migration could take a long time, but without this indicating a problem.
+              In such cases, you can use --reminder to request reminder output every X minutes (a best-effort attempt is
+              made, so to be safe you should set a lower value than you really need); a value of 0 disables reminder
+              outout.  Value must be non-negative, but can be a decimal (e.g. --reminder .5)"
   "dollar-quoting":
     boolean: true
-    describe: "If set, dbsync will allow dollar-quoted strings as specified by PostgreSQL. This is not relevant when
-              --migration-at-once is also used.  For more details, see section 4.1.2.4. (Dollar-quoted String
-              Constants) of 
+    describe: "If set, this will force dbsync to allow dollar-quoted strings as specified by PostgreSQL. The negation,
+              --no-dollar-quoting, is also available to force quoting to be turned off (this may make a minor
+              improvement to resource usage by dbsync).  The default value for this option is true when --client is set
+              to 'pg', and false otherwise.  This is not relevant when --migration-at-once is also used.  For more
+              details on dollar-quoting, see section 4.1.2.4 (Dollar-quoted String Constants) of
               http://www.postgresql.org/docs/9.3/static/sql-syntax-lexical.html"
   "command-buffering":
     requiresArg: true
