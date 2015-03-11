@@ -33,7 +33,9 @@ validateOptions = (optionsToCheck) ->
   if optionsToCheck["on-read-error"]? && ["ignore", "log", "exit"].indexOf(optionsToCheck["on-read-error"]) == -1
     throw "invalid value for 'on-read-error': '#{optionsToCheck["on-read-error"]}'"
 
-  if optionsToCheck["command-buffering"]? && !validateNumber(optionsToCheck["command-buffering"], min: 1, integer: true)
+  if optionsToCheck["command-buffering"]? && !validateNumber(optionsToCheck["command-buffering"],
+      min: 1
+      integer: true)
     throw "positive integer required for 'command-buffering', got: '#{optionsToCheck["command-buffering"]}'"
 
   if optionsToCheck.reminder? && !validateNumber(optionsToCheck.reminder, min: 0)
