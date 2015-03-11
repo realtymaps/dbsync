@@ -216,12 +216,11 @@ by `scanForFiles()`).
 `migrator.executionContext.files` will be used as its list of migration files.  This means it is possible to set a
 custom list of files (or a custom ordering of files) by setting `migrator.executionContext.files` before calling
 `migrator.doAllMigrationsIfNeeded()`.  This method returns a promise which resolves to `migrator.executionContext` when
-all the migrations in the list have been skipped (based on the result of `migrator.shouldMigrationRun(migrationId)`)
+all the migrations in the list have been skipped (based on the result of `shouldMigrationRun()`)
 or have succeeded, or when a single migration fails.
-* `migrator.doSingleMigrationIfNeeded(migrationId, [migrationSource])` is similar to
-`migrator.doAllMigrationsIfNeeded()`, but only performs a single migration (or skips it, based on
-`migrator.shouldMigrationRun(migrationId)`), and has a number of advanced behaviors available based on
-`migrationSource`:
+* `migrator.doSingleMigrationIfNeeded(migrationId, [migrationSource])` is similar to `doAllMigrationsIfNeeded()`, but
+only performs a single migration (or skips it, based on `shouldMigrationRun()`), and has a number of advanced behaviors
+available based on `migrationSource`:
   * if `migrationSource` is `undefined` or `null`, then `migrationId` is treated as a filename; otherwise, it
 `migrationId` is a user-defined string id which will identify this migration.
   * if `migrationSource` is a string, the string will be used as the content of the migration.
@@ -232,7 +231,7 @@ can make it return strings by calling `myStream.setEncoding(encoding)`.)
 value will be used as described above.
   * if `migrationSource` is a function, the function will be called and its return value (which must be a string,
 readable stream, or promise to one of those) will be used as described above.  Note that the function will
-only be called if `migrator.shouldMigrationRun(migrationId)` resolved to `true` for `migrationId`; this makes it useful
+only be called if `shouldMigrationRun()` resolved to `true` for `migrationId`; this makes it useful
 for migrations that require some effort/time/resources to set up, such as creating a stream that downloads a file from
 a server.  By putting such setup in a function and passing that as the `migrationSource`, the download will never be
 initiated unless dbsync intends to execute the migration.
