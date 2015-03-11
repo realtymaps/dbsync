@@ -184,7 +184,8 @@ will use options equivalent to the following options object:
   },
   files: ['*.sql', '*.pgsql'],
   "case-sensitive": true,
-  "stack-traces": false   // all booleans default to false, so this is the same as not specifying it
+  "stack-traces": false   // all booleans (except 'dollar-quoting') default to
+                          // false, so this is the same as not specifying it
 }
 ```
 
