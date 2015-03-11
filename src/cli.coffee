@@ -23,8 +23,8 @@ optionSpecs =
     describe: "Additional db connection options, as appropriate to pass to knex in the initialization object:
               http://knexjs.org/#Installation-client  In order to set subproperties, use dot notation as in these
               examples:
-              \n    --client=pg --connection=postgres://user:pw@host:port/dbname?opts
-              \n    --client=mysql --connection.user=user --connection.host=localhost
+              \n    --client=pg --connection=postgres://usr:pw@host:port/dbname?opts
+              \n    --client=mysql --connection.user=usr --connection.host=localhost
               \n    --client=sqlite3 --connection.filename=./mydb.sqlite"
   table:
     alias: "t"

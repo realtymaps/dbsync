@@ -51,83 +51,88 @@ dbsync will be used, or globally.
 Below are the details of command line options available for dbsync (the same help block can be displayed by running
 `dbsync --help`).
 ```
---help, -h             Show help                                                                
---path, -p             Directory to scan for migration files; this part of the file path will
-                       not be used when determining whether a migration has been run before.
-                                                                                      [required]
---client, --db         A db client string, as appropriate to pass to knex in the initialization
-                       object: http://knexjs.org/#Installation-client                 [required]
---connection, --conn   Additional db connection options, as appropriate to pass to knex in the
-                       initialization object: http://knexjs.org/#Installation-client  In order
-                       to set subproperties, use dot notation as in these examples: 
-                       --client=pg --connection=postgres://user:pw@host:port/dbname?opts 
-                       --client=mysql --connection.user=user --connection.host=localhost 
-                       --client=sqlite3 --connection.filename=./mydb.sqlite           [required]
---table, -t            Table name for tracking migrations         [default: "dbsync_migrations"]
+--help, -h             Show help                                                             
+--path, -p             Directory to scan for migration files; this part of the file path
+                       will not be used when determining whether a migration has been run
+                       before.                                                     [required]
+--client, --db         A db client string, as appropriate to pass to knex in the
+                       initialization object: http://knexjs.org/#Installation-client
+                                                                                   [required]
+--connection, --conn   Additional db connection options, as appropriate to pass to knex in
+                       the initialization object: http://knexjs.org/#Installation-client  In
+                       order to set subproperties, use dot notation as in these
+                       examples: 
+                       --client=pg --connection=postgres://usr:pw@host:port/dbname?opts 
+                       --client=mysql --connection.user=usr --connection.host=localhost 
+                       --client=sqlite3 --connection.filename=./mydb.sqlite        [required]
+--table, -t            Table name for tracking migrations      [default: "dbsync_migrations"]
 --files                Glob pattern used to filter which files in the path are treated as
                        migrations.  May be specified multiple times, in which case files
                        matching any of the globs will be treated as migrations.
-                                                                              [default: "*.sql"]
---encoding, -e         Encoding to use when reading files.                     [default: "utf8"]
+                                                                           [default: "*.sql"]
+--encoding, -e         Encoding to use when reading files.                  [default: "utf8"]
 --case-sensitive, -c   If set, the glob pattern will be matched against files as a
-                       case-sensitive pattern.                                                  
+                       case-sensitive pattern.                                               
 --recursive, -r        If set, subdirectories within the path will be traversed and searched
                        for migrations matching the filter pattern; this option is ignored if
-                       the files glob option contains a slash character.                        
+                       the files glob option contains a slash character.                     
 --order, -o            Governs whether migrations are ordered based on the file's basename
                        alone, or the full file path; must be one of: basename, path
-                                                                               [default: "path"]
+                                                                            [default: "path"]
 --logging, -l          Logging verbosity; must be one of: debug, info, warn, error, silent
-                                                                               [default: "info"]
+                                                                            [default: "info"]
 --on-read-error        Governs behavior when an unusual directory read error is encountered;
-                       must be one of: ignore, log, exit                       [default: "exit"]
+                       must be one of: ignore, log, exit                    [default: "exit"]
 --test                 If set, instead of performing migrations, dbsync will simply log any
-                       messages about actions it would have performed normally.                 
+                       messages about actions it would have performed normally.              
 --autocommit           If set, the commands in the migrations will be run and committed
                        individually, rather than wrapping each migration inside a single
                        transaction; this is useful if you want to manually manage multiple
-                       transactions within a migration, or if you want to execute commands not
-                       allowed within a transaction (like DROP DATABASE).  This option
-                       conflicts with --migration-at-once and --one-transaction.                
---migration-at-once    If set, dbsync will not count lines or commands, but instead will load
-                       each migration entirely into memory and pass it to the db at once.  This
-                       will keep dbsync from processing the text of the migration, but might
-                       require a lot of memory for large migrations.  This option conflicts
-                       with --autocommit.                                                       
+                       transactions within a migration, or if you want to execute commands
+                       not allowed within a transaction (like DROP DATABASE).  This option
+                       conflicts with --migration-at-once and --one-transaction.             
+--migration-at-once    If set, dbsync will not count lines or commands, but instead will
+                       load each migration entirely into memory and pass it to the db at
+                       once.  This will keep dbsync from processing the text of the
+                       migration, but might require a lot of memory for large migrations.
+                       This option conflicts with --autocommit.                              
 --one-transaction, -1  If set, dbsync will run all the migrations as a single transaction,
                        rather than one transaction per migration.  Migration table
                        initialization, and updates to the migration table for pending and
                        failed migrations will not be executed as part of this transaction.
-                       This option conflicts with --autocommit.                                 
+                       This option conflicts with --autocommit.                              
 --forget               If set, dbsync will not record any migrations that it performs during
                        this run, nor will it create the migrations table if it doesn't yet
                        exist, but it will still refuse to run migrations that have succeeded
-                       previously (unless --blindly is also used); this is useful for scripting
+                       previously (unless --blindly is also used); this is useful for
+                       scripting misc db commands without requiring any additional client
+                       tools to be installed.                                                
+--blindly              If set, dbsync will not restrict the migrations performed to only
+                       those that have not run successfully before; this is useful for
+                       rerunning previously-run scripts during development, or for scripting
                        misc db commands without requiring any additional client tools to be
-                       installed.                                                               
---blindly              If set, dbsync will not restrict the migrations performed to only those
-                       that have not run successfully before; this is useful for rerunning
-                       previously-run scripts during development, or for scripting misc db
-                       commands without requiring any additional client tools to be installed.  
---reminder             Some environments where dbsync may run (e.g. CircleCI) require periodic
-                       output to ensure the process is running properly.  Sometimes a migration
-                       could take a long time, but without this indicating a problem. In such
-                       cases, you can use --reminder to request reminder output every X minutes
-                       (a best-effort attempt is made, so to be safe you should set a lower
-                       value than you really need); a value of 0 disables reminder outout.
-                       Value must be non-negative, but can be a decimal (e.g. --reminder .5)
-                                                                                    [default: 0]
+                       installed.                                                            
+--reminder             Some environments where dbsync may run (e.g. CircleCI) require
+                       periodic output to ensure the process is running properly.  Sometimes
+                       a migration could take a long time, but without this indicating a
+                       problem. In such cases, you can use --reminder to request reminder
+                       output every X minutes (a best-effort attempt is made, so to be safe
+                       you should set a lower value than you really need); a value of 0
+                       disables reminder outout.  Value must be non-negative, but can be a
+                       decimal (e.g. --reminder .5)                              [default: 0]
 --dollar-quoting       If set, this will force dbsync to allow dollar-quoted strings as
                        specified by PostgreSQL. The negation, --no-dollar-quoting, is also
                        available to force quoting to be turned off (this may make a minor
                        improvement to resource usage by dbsync).  The default value for this
-                       option is true when --client is set to 'pg', and false otherwise.  This
-                       is not relevant when --migration-at-once is also used.  For more details
-                       on dollar-quoting, see section 4.1.2.4 (Dollar-quoted String Constants)
-                       of http://www.postgresql.org/docs/9.3/static/sql-syntax-lexical.html     
+                       option is true when --client is set to 'pg', and false otherwise.
+                       This is not relevant when --migration-at-once is also used.  For more
+                       details on dollar-quoting, see section 4.1.2.4 (Dollar-quoted String
+                       Constants) of
+                       http://www.postgresql.org/docs/9.3/static/sql-syntax-lexical.html     
 --command-buffering    This sets the number of SQL commands to buffer before pausing reading
-                       from the file; must be a positive integer. This is a performance-tuning
-                       option and shouldn't need to be altered for most use cases.  [default: 4]
+                       from the file; must be a positive integer. This is a
+                       performance-tuning option and shouldn't need to be altered for most
+                       use cases.                                                [default: 4]
 --stack-traces         If set, stack traces will be logged with any errors (when present).
 ```
 
