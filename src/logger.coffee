@@ -19,6 +19,7 @@ _createLogger = (level) ->
   noop = () -> return undefined
   for levelName,i in levels
     logger[levelName] = if i<index then noop else console[levelName]||console.log
+  logger.log = console.log
   return logger
 
 module.exports =
@@ -26,7 +27,7 @@ module.exports =
     if !logger
       return _createLogger('silent')
     else if typeof logger == 'object'
-      if _.isFunction(logger.debug) && _.isFunction(logger.info) && _.isFunction(logger.warn) && _.isFunction(logger.error)
+      if _.isFunction(logger.debug) && _.isFunction(logger.info) && _.isFunction(logger.warn) && _.isFunction(logger.error) && _.isFunction(logger.log)
         return logger
     else if typeof logger == 'string'
       return _createLogger(logger)
