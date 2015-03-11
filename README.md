@@ -162,7 +162,7 @@ programmatic use.
 * Options that do not take values will be interpreted as booleans; this is, if the option is given a truthy value, it
 will be turned on.
 * For options that take values, the same allowed values and defaults apply.
-* Options allowing dot notation on the command line (such as `--connection`) correspond a nested object
+* Options allowing dot notation on the command line (such as `--connection`) correspond to a nested object
 * Multiple uses of an option (such as `--files`) correspond to an array of values
 
 Example:
