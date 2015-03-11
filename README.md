@@ -212,12 +212,11 @@ run based on the migrator's options (so this function will always yield `true` w
 `migrationId` for a file-based migration is the file's name, including path relative to the `path` option (as returned
 by `scanForFiles()`).
 * `migrator.doAllMigrationsIfNeeded()` is what is used to execute migrations based on a command line invocation.  If
-`migrator.executionContext.files` is falsy, it will be set with the value returned by `migrator.scanForFiles()`, then
-`migrator.executionContext.files` will be used as its list of migration files.  This means it is possible to set a
-custom list of files (or a custom ordering of files) by setting `migrator.executionContext.files` before calling
-`migrator.doAllMigrationsIfNeeded()`.  This method returns a promise which resolves to `migrator.executionContext` when
-all the migrations in the list have been skipped (based on the result of `shouldMigrationRun()`)
-or have succeeded, or when a single migration fails.
+`executionContext.files` is falsy, it will be set with the value returned by `scanForFiles()`, then
+`executionContext.files` will be used as its list of migration files.  This means it is possible to set a custom list
+of files (or a custom ordering of files) by setting `executionContext.files` before calling `doAllMigrationsIfNeeded()`.
+This method returns a promise which resolves to `executionContext` when all the migrations in the list have been
+skipped (based on the result of `shouldMigrationRun()`) or have succeeded, or when a single migration fails.
 * `migrator.doSingleMigrationIfNeeded(migrationId, [migrationSource])` is similar to `doAllMigrationsIfNeeded()`, but
 only performs a single migration (or skips it, based on `shouldMigrationRun()`), and has a number of advanced behaviors
 available based on `migrationSource`:
