@@ -19,17 +19,16 @@ dbsync supports any database that [Knex.js](http://knexjs.org/) does.  For now, 
 #### The db "migration" concept
 
 Any time a change in the code requires a change in the db structure, a transformation of the data, and/or a small
-amount of new data to be inserted, it should happen as a SQL "migration".
+amount of new data to be inserted, it should happen as a SQL "migration".  The following bullets describe migrations
+as they are generally used, and the default behaviors for dbsync; however, all of those behaviors can be altered via
+the command line options described later.
 
-Generally, once a migration has been applied to a given database, it will not be applied again to that same database.
-
-Migration files are not inspected for changes; if the filename is the same as a previously successful migration, it
+* Generally, once a migration has been applied to a given database, it will not be applied again to that same database.
+* Migration files are not inspected for changes; if the filename is the same as a previously successful migration, it
 will not be run again.
-
-A migration file will either be applied in its entirety or not at all.  If a migration is not applied (due to an
+* A migration file will either be applied in its entirety or not at all.  If a migration is not applied (due to an
 error), no more migrations will be attempted, and the failed migration will be attempted again on next execution.
-
-Migrations are ordered; they are applied in alphabetical order by filename, including path.
+* Migrations are ordered; they are applied in alphabetical order by filename, including path.
 
 #### Using dbsync to perform migrations
 
