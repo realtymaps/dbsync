@@ -206,7 +206,7 @@ information about the execution of the migration set.  (This object should never
 migration set is running.)
 * `migrator.scanForFiles()` returns a promise of an array of strings representing files (relative to the `path` option)
 which will be considered for migration, sorted in the order they will be considered according to the `order` option.
-Files representing migrations which have already successfully executed will *not* be filtered from this list.
+Files representing migrations which have already successfully executed will *not* already be filtered from this list.
 * `migrator.shouldMigrationRun(migrationId)` returns a promise of a boolean representing whether the migration needs to
 run based on the migrator's options (so this function will always yield `true` when `blindly: true` is set).  The
 `migrationId` for a file-based migration is the file's name, including path relative to the `path` option (as returned
