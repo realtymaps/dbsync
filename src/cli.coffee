@@ -98,7 +98,6 @@ optionSpecs =
               made, so to be safe you should set a lower value than you really need); a value of 0 disables reminder
               outout.  Value must be non-negative, but can be a decimal (e.g. --reminder .5)"
   "dollar-quoting":
-    boolean: true
     describe: "If set, this will force dbsync to allow dollar-quoted strings as specified by PostgreSQL. The negation,
               --no-dollar-quoting, is also available to force quoting to be turned off (this may make a minor
               improvement to resource usage by dbsync).  The default value for this option is true when --client is set
