@@ -1,6 +1,6 @@
 {
   "name": "dbsync",
-  "version": "1.1.0",
+  "version": "1.1.2",
   "description": "A flexible, easy-to-use, unopinionated schema migration / database change management tool.",
   "author": "RealtMapster, LLC",
   "main": "./src/app.js",
