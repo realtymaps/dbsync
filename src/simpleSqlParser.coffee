@@ -168,10 +168,11 @@ class SimpleSqlParser
 
     @sqlStream.on 'end', () =>
       @streamDone = true
-      @commandQueue.push
-        command: @residual.trimRight()
-        commandNumber: @commandNumber
-        lineNumber: @lineCommandStartedOn
+      if @residual.trimRight()
+        @commandQueue.push
+          command: @residual.trimRight()
+          commandNumber: @commandNumber
+          lineNumber: @lineCommandStartedOn
       if @waitingForStreamedCommand
         handleQueuedCommand()
         
