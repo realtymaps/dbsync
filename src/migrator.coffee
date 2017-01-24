@@ -161,7 +161,7 @@ module.exports = class Migrator
           @executionContext.currentMigration.currentCommand = commandInfo.command
           @executionContext.currentMigration.commandsCompleted = commandInfo.commandNumber-1
           @executionContext.currentMigration.linesCompleted = commandInfo.lineNumber-1
-          client.raw(commandInfo.command)
+          client.raw(commandInfo.command.replace(/\?/g,'\\?'))
   
       parserPromise.then () =>
         # at this point, all the commands for this migration are done -- but we still need to update the

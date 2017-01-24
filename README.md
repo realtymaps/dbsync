@@ -7,6 +7,11 @@ At its most basic level, dbsync is a command line tool that scans a path for fil
 found which have not been (successfully) run before will be run in ascending order based on path/filename. Various
 options can be used to change those basic behaviors.
 
+### Version 2.0
+Version 2.0 is a small breaking change to handle problems handling migrations that contain a `?` character.  For most
+users this should be transparent, but if any users hit that problem before and worked around it with manual escaping,
+that manual escaping is no longer necessary (and in fact could leave your escaping in the migration).
+
 #### Supported databases
 
 dbsync supports any database that [Knex.js](http://knexjs.org/) does.  For now, that means:
